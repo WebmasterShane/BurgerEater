@@ -6,7 +6,7 @@
 // Add a flag for complete so that it's false by default if not given a value
 
 module.exports = function(sequelize, DataTypes) {
-  var Todo = sequelize.define("Todo", {
+  var Burger = sequelize.define("burger", {
     text: {
           type: DataTypes.STRING,
           allowNull: false,
@@ -19,5 +19,5 @@ module.exports = function(sequelize, DataTypes) {
           defaultValue: false
       }
   });
-  return Todo;
+  return Burger;
 };
