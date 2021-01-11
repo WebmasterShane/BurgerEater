@@ -12,25 +12,25 @@ $(document).ready(function() {
   $(document).on("submit", "#todo-form", insertTodo);
 
   // Our initial todos array
-  var todos = [];
+  var burg = [];
 
   // Getting todos from database when page loads
-  getTodos();
+  getBurg();
 
   // This function resets the todos displayed with new todos from the database
   function initializeRows() {
     $todoContainer.empty();
     var rowsToAdd = [];
-    for (var i = 0; i < todos.length; i++) {
-      rowsToAdd.push(createNewRow(todos[i]));
+    for (var i = 0; i < burg.length; i++) {
+      rowsToAdd.push(createNewRow(burg[i]));
     }
     $todoContainer.prepend(rowsToAdd);
   }
 
   // This function grabs todos from the database and updates the view
-  function getTodos() {
-    $.get("/api/todos", function(data) {
-      todos = data;
+  function getBurg() {
+    $.get("/api/burgers", function(data) {
+      burg = data;
       initializeRows();
     });
   }
@@ -41,8 +41,8 @@ $(document).ready(function() {
     var id = $(this).data("id");
     $.ajax({
       method: "DELETE",
-      url: "/api/todos/" + id
-    }).then(getTodos);
+      url: "/api/burgers/" + id
+    }).then(getBurg);
   }
 
   // This function handles showing the input box for a user to edit a todo
@@ -57,29 +57,29 @@ $(document).ready(function() {
   // Toggles complete status
   function toggleComplete(event) {
     event.stopPropagation();
-    var todo = $(this).parent().data("todo");
-    todo.complete = !todo.complete;
-    updateTodo(todo);
+    var burg = $(this).parent().data("burg");
+    burg.complete = !burg.complete;
+    updateTodo(burg);
   }
 
   // This function starts updating a todo in the database if a user hits the "Enter Key"
   // While in edit mode
   function finishEdit(event) {
-    var updatedTodo = $(this).data("todo");
+    var updateBurg = $(this).data("Burg");
     if (event.which === 13) {
-      updatedTodo.text = $(this).children("input").val().trim();
+      updatedBurg.text = $(this).children("input").val().trim();
       $(this).blur();
-      updateTodo(updatedTodo);
+      updateTodo(updateBurg);
     }
   }
 
   // This function updates a todo in our database
-  function updateTodo(todo) {
+  function updateTodo(burg) {
     $.ajax({
       method: "PUT",
-      url: "/api/todos",
-      data: todo
-    }).then(getTodos);
+      url: "/api/burgers",
+      data: burg
+    }).then(getBurg);
   }
 
   // This function is called whenever a todo item is in edit mode and loses focus
@@ -95,12 +95,12 @@ $(document).ready(function() {
   }
 
   // This function constructs a todo-item row
-  function createNewRow(todo) {
+  function createNewRow(burg) {
     var $newInputRow = $(
       [
         "<li class='list-group-item todo-item'>",
         "<span>",
-        todo.text,
+        burg.text,
         "</span>",
         "<input type='text' class='edit' style='display: none;'>",
         "<button class='delete btn btn-danger'>x</button>",
@@ -109,10 +109,10 @@ $(document).ready(function() {
       ].join("")
     );
 
-    $newInputRow.find("button.delete").data("id", todo.id);
+    $newInputRow.find("button.delete").data("id", burg.id);
     $newInputRow.find("input.edit").css("display", "none");
-    $newInputRow.data("todo", todo);
-    if (todo.complete) {
+    $newInputRow.data("todo", burg);
+    if (burg.complete) {
       $newInputRow.find("span").css("text-decoration", "line-through");
     }
     return $newInputRow;
@@ -121,12 +121,12 @@ $(document).ready(function() {
   // This function inserts a new todo into our database and then updates the view
   function insertTodo(event) {
     event.preventDefault();
-    var todo = {
+    var burg = {
       text: $newItemInput.val().trim(),
       complete: false
     };
 
-    $.post("/api/todos", todo, getTodos);
+    $.post("/api/burgers", burg, getBurg);
     $newItemInput.val("");
   }
 });
