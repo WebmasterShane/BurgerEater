@@ -6,12 +6,12 @@
 
 // Requiring our models
 var db = require("../models");
-var bgers = require("../models/burger")
+
 // Routes =============================================================
 module.exports = function(app) {
 
   // GET route for getting all of the todos
-  app.get("/api/burgers", function(req, res) {
+  app.get("/api/burger", function(req, res) {
     var bgers = require("../models/burger")(app)
     // findAll returns all entries for a table when used with no options
     bgers.Burger.findAll({}).then(function(dbBurg) {
@@ -26,7 +26,7 @@ module.exports = function(app) {
     // create takes an argument of an object describing the item we want to insert
     // into our table. In this case we just we pass in an object with a text and
     // complete property
-    bgers.Burger.create({
+    db.Burger.create({
       burgerName: req.body.burgerName,
       }).then(function(dbBurg) {
       // We have access to the new todo as an argument inside of the callback function
@@ -39,7 +39,7 @@ module.exports = function(app) {
   // from req.params.id
   app.delete("/api/burgers/:id", function(req, res) {
     // Destroy takes in one argument: a "where object describing the todos we want to destroy
-    bgers.Burger.destroy({
+    db.Burger.destroy({
       where: {
         id: req.params.id
       }
@@ -54,7 +54,7 @@ module.exports = function(app) {
   app.put("/api/burgers", function(req, res) {
     // Update takes in two arguments, an object describing the properties we want to update,
     // and another "where" object describing the todos we want to update
-    bgers.Burger.update({
+    db.Burger.update({
       burgerName: req.body.burgerName,
     }, {
       where: {
