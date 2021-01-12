@@ -6,13 +6,14 @@
 
 // Requiring our models
 var db = require("../models");
+var bgers = require("../models/burger")
 
 // Routes =============================================================
 module.exports = function(app) {
-
+  
   // GET route for getting all of the todos
-  app.get("/api/burger", function(req, res) {
-    var bgers = require("../models/burger")(app)
+  app.get("/api/burgers", function(req, res) {
+    
     // findAll returns all entries for a table when used with no options
     bgers.Burger.findAll({}).then(function(dbBurg) {
       // We have access to the todos as an argument inside of the callback function
@@ -26,7 +27,7 @@ module.exports = function(app) {
     // create takes an argument of an object describing the item we want to insert
     // into our table. In this case we just we pass in an object with a text and
     // complete property
-    db.Burger.create({
+    bgers.Burger.create({
       burgerName: req.body.burgerName,
       }).then(function(dbBurg) {
       // We have access to the new todo as an argument inside of the callback function
