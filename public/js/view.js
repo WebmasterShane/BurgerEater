@@ -2,14 +2,14 @@ $(document).ready(function() {
 
   var $newItemInput = $("input.new-item");
  
-  var $todoContainer = $(".todo-container");
+  var $burgerContainer = $(".burger-container");
 
-  $(document).on("click", "button.delete", deleteTodo);
+  
   $(document).on("click", "button.complete", toggleComplete);
-  $(document).on("click", ".todo-item", editTodo);
-  $(document).on("keyup", ".todo-item", finishEdit);
-  $(document).on("blur", ".todo-item", cancelEdit);
-  $(document).on("submit", "#todo-form", insertTodo);
+
+
+
+  $(document).on("submit", "#burg-form", insertBurg);
 
 
   var burg = [];
@@ -19,45 +19,30 @@ $(document).ready(function() {
 
   
   function initializeRows() {
-    $todoContainer.empty();
+    $burgerContainer.empty();
     var rowsToAdd = [];
     for (var i = 0; i < burg.length; i++) {
       rowsToAdd.push(createNewRow(burg[i]));
     }
-    $todoContainer.prepend(rowsToAdd);
+    $burgerContainer.prepend(rowsToAdd);
   }
 
 
   function getBurg() {
     $.get("/api/burgers", function(data) {
       burg = data;
+      console.log(burg)
       initializeRows();
     });
   }
 
 
-  function deleteTodo(event) {
-    event.stopPropagation();
-    var id = $(this).data("id");
-    $.ajax({
-      method: "DELETE",
-      url: "/api/burgers/" + id
-    }).then(getBurg);
-  }
-
-  function editTodo() {
-    var currentTodo = $(this).data("todo");
-    $(this).children().hide();
-    $(this).children("input.edit").val(currentTodo.text);
-    $(this).children("input.edit").show();
-    $(this).children("input.edit").focus();
-  }
-
 
   function toggleComplete(event) {
     event.stopPropagation();
     var burg = $(this).parent().data("burg");
-    burg.complete = !burg.complete;
+    burg.devoured = true;
+    console.log(burg);
     updateTodo(burg);
   }
 
@@ -80,27 +65,16 @@ $(document).ready(function() {
     }).then(getBurg);
   }
 
-  function cancelEdit() {
-    var currentTodo = $(this).data("todo");
-    if (currentTodo) {
-      $(this).children().hide();
-      $(this).children("input.edit").val(currentTodo.text);
-      $(this).children("span").show();
-      $(this).children("button").show();
-    }
-  }
-
-  // This function constructs a todo-item row
   function createNewRow(burg) {
     var $newInputRow = $(
       [
-        "<li class='list-group-item todo-item'>",
+        "<li class='list-group-item burg-item'>",
         "<span>",
-        burg.text,
+        burg.burgerName,
         "</span>",
         "<input type='text' class='edit' style='display: none;'>",
-        "<button class='delete btn btn-danger'>x</button>",
-        "<button class='complete btn btn-primary'>✓</button>",
+        ,
+        "<button class='complete btn btn-primary'>Eat</button>",
         "</li>"
       ].join("")
     );
@@ -114,11 +88,11 @@ $(document).ready(function() {
     return $newInputRow;
   }
 
-  // This function inserts a new todo into our database and then updates the view
-  function insertTodo(event) {
+
+  function insertBurg(event) {
     event.preventDefault();
     var burg = {
-      text: $newItemInput.val().trim(),
+      burgerName: $newItemInput.val().trim(),
       complete: false
     };
 
